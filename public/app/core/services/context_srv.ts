@@ -72,6 +72,7 @@ export class ContextSrv {
   sidemenuSmallBreakpoint = false;
   hasEditPermissionInFolders: boolean;
   minRefreshInterval: string;
+  viewersCanEdit: boolean;
 
   constructor() {
     if (!config.bootData) {
@@ -84,6 +85,7 @@ export class ContextSrv {
     this.isEditor = this.hasRole('Editor') || this.hasRole('Admin');
     this.hasEditPermissionInFolders = this.user.hasEditPermissionInFolders;
     this.minRefreshInterval = config.minRefreshInterval;
+    this.viewersCanEdit = config.viewersCanEdit;
   }
 
   async fetchUserPermissions() {
@@ -112,6 +114,10 @@ export class ContextSrv {
     } else {
       return this.user.orgRole === role;
     }
+  }
+
+  canCreateDashboards(fallback: boolean) {
+    return this.hasAccess(AccessControlAction.DashboardsCreate, fallback) || this.viewersCanEdit;
   }
 
   accessControlEnabled(): boolean {
