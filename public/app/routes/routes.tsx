@@ -77,10 +77,12 @@ export function getAppRoutes(): RouteDescriptor[] {
     {
       path: '/dashboard/new',
       roles: () => {
-        const roles = contextSrv.evaluatePermission(() => ['Editor', 'Admin'], [AccessControlAction.DashboardsCreate]);
+        const defaultAllowedRoles = ['Editor', 'Admin'];
         if (contextSrv.viewersCanEdit) {
-          roles.push('Viewer');
+          defaultAllowedRoles.push('Viewer');
         }
+        const roles = contextSrv.evaluatePermission(() => defaultAllowedRoles, [AccessControlAction.DashboardsCreate]);
+
         return roles;
       },
       pageClass: 'page-dashboard',
